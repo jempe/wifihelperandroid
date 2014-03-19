@@ -13,6 +13,7 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.widget.RemoteViews;
+import android.widget.Toast;
 
 import com.julianogv.wifihelper.Defines;
 import com.julianogv.wifihelper.R;
@@ -41,6 +42,7 @@ public class WifiReceiver extends BroadcastReceiver{
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        //Toast.makeText(context, "Wifi Receiver", Toast.LENGTH_LONG).show();
         StringBuilder sb = new StringBuilder();
         mainWifi = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
 
@@ -142,6 +144,7 @@ public class WifiReceiver extends BroadcastReceiver{
         //altera o conteudo do texto da notificacao
         contentView.setTextViewText(R.id.txtNotificationText, "Switch to: " + newWifi.SSID);
 
+        //todo: improve the way I do this
         contentView.setTextViewText(R.id.txtWifiInfo, "Current: " + currentWifi.SSID+": "
                 + currentWifi.level + "\nNew:      " + newWifi.SSID + ": " + newWifi.level);
 
