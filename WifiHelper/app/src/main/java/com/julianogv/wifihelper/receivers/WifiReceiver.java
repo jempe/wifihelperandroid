@@ -15,10 +15,8 @@ import android.net.wifi.WifiManager;
 import android.widget.RemoteViews;
 
 import com.julianogv.wifihelper.Defines;
-import com.julianogv.wifihelper.MainActivity;
 import com.julianogv.wifihelper.R;
 import com.julianogv.wifihelper.WifiUtils;
-import com.julianogv.wifihelper.services.ButtonHandlerService;
 
 import java.util.List;
 
