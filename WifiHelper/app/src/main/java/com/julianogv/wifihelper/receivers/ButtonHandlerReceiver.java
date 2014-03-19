@@ -30,7 +30,6 @@ public class ButtonHandlerReceiver extends BroadcastReceiver {
         }
 
         WifiUtils.cancelNotification(context);
-        Intent it = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
-        context.sendBroadcast(it);
+        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
     }
 }

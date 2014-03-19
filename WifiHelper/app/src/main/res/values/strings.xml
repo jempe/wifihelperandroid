@@ -5,6 +5,6 @@
 
     <string name="action_settings">Settings</string>
     <string name="tolerate">How much will you tolerate between wifi signals?</string>
-    <string name="working">It\'s already working!\n\nWait and when it finds a better WiFi signal you will be notified!</string>
+    <string name="working">It\'s already working!\n\nAs soon as it finds a better WiFi signal you will be notified!\n\nThat\'s all, you can close the app now!</string>
 
 </resources>

@@ -16,17 +16,13 @@ android {
         }
 
         releaseSign {
-            def propsFile = rootProject.file('C:/Users/juliano.vieira/Google Drive/android projects/wifihelper utils/keystore.properties')
-            def props = new Properties()
-            props.load(new FileInputStream(propsFile))
 
-            keyAlias props['keyAlias']
-            keyPassword props['keyPassword']
-            storeFile file(props['storeFile'])
-            storePassword props['storePassword']
+            storeFile file('C:/Users/juliano.vieira/Google Drive/androidprojects/wifihelper utils/androidkey')
+            keyPassword System.console().readPassword("\nkeyPassword: ")
+            keyAlias System.console().readLine("\nkeyAlias: ")
+            storePassword System.console().readPassword("\nstorePassword: ")
         }
     }
-
     buildTypes {
         release {
             signingConfig signingConfigs.releaseSign
