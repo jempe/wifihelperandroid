@@ -1,0 +1,71 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.julianogv.wifihelper.MainActivity">
+
+
+    <EditText
+        android:layout_width="59dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtTolerate"
+        android:enabled="false"
+        android:layout_row="0"
+        android:layout_column="1"
+        android:text="0"
+        android:gravity="center"
+        android:layout_above="@+id/wifiListView"
+        android:layout_alignRight="@+id/textView3"
+        android:layout_alignEnd="@+id/textView3" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="190dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/wifiListView"
+        android:layout_row="1"
+        android:layout_column="1"
+        android:layout_columnSpan="2"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true" />
+
+    <SeekBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/seekBarTolerate"
+        android:max="100"
+        android:defaultValue="1"
+        android:indeterminate="false"
+        android:layout_alignTop="@+id/txtTolerate"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@+id/switchServiceStatus" />
+
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/switchServiceStatus"
+        android:checked="true"
+        android:clickable="true"
+        android:enabled="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:textOff="OFF"
+        android:textOn="ON" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="  How much will you tolerate between wifi signals?"
+        android:id="@+id/textView3"
+        android:textColor="#4e4e4e"
+        android:layout_below="@+id/switchServiceStatus"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="34dp" />
+</RelativeLayout>
