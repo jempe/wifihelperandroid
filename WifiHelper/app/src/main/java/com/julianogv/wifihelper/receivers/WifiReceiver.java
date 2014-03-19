@@ -15,6 +15,7 @@ import android.net.wifi.WifiManager;
 import android.widget.RemoteViews;
 
 import com.julianogv.wifihelper.Defines;
+import com.julianogv.wifihelper.MainActivity;
 import com.julianogv.wifihelper.R;
 import com.julianogv.wifihelper.WifiUtils;
 import com.julianogv.wifihelper.services.ButtonHandlerService;
@@ -108,11 +109,48 @@ public class WifiReceiver extends BroadcastReceiver{
                 && !bestResult.BSSID.equals(currentBSSID)
                 && signalDiff < 0
                 && isHigherThanMinimum){
-            WifiUtils.createNotification(bestResult, currentWifi, context);
+            createNotification(bestResult, currentWifi, context);
             return;
         }
         //cancel old notifications
         WifiUtils.cancelNotification(context);
         return;
     }
+
+    public void createNotification(ScanResult newWifi, ScanResult currentWifi, Context context){
+
+        //yesButton Listener
+        Intent yesButtonIntent = new Intent(context, ButtonHandlerReceiver.class);
+        yesButtonIntent.setAction(Defines.YES_ACTION);
+        yesButtonIntent.putExtra("ssid", newWifi.SSID);
+        PendingIntent pYesButton = PendingIntent.getBroadcast(context, 0, yesButtonIntent,
+                android.content.Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        //noButton Listener
+        Intent noButtonIntent = new Intent(context, ButtonHandlerReceiver.class);
+        noButtonIntent.setAction(Defines.NO_ACTION);
+        PendingIntent pNoButton = PendingIntent.getBroadcast(context, 1, noButtonIntent,
+                android.content.Intent.FLAG_ACTIVITY_NEW_TASK);
+
+
+        Notification.Builder mBuilder = new Notification.Builder(context)
+                .setSmallIcon(R.drawable.ic_launcher)
+                .setAutoCancel(true);
+        RemoteViews contentView = new RemoteViews(context.getPackageName(), R.layout.notification_activity);
+        contentView.setOnClickPendingIntent(R.id.yesButton, pYesButton);
+        contentView.setOnClickPendingIntent(R.id.noButton, pNoButton);
+        mBuilder.setContent(contentView);
+
+        //altera o conteudo do texto da notificacao
+        contentView.setTextViewText(R.id.txtNotificationText, "Switch to: " + newWifi.SSID);
+
+        contentView.setTextViewText(R.id.txtWifiInfo, "Current: " + currentWifi.SSID+": "
+                + currentWifi.level + "\nNew:      " + newWifi.SSID + ": " + newWifi.level);
+
+        NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        manager.cancel(Defines.NOTIFICATION_ID);
+        manager.notify(Defines.NOTIFICATION_ID, mBuilder.getNotification());
+
+    }
+
 }

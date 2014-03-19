@@ -43,6 +43,17 @@
             </intent-filter>
         </receiver>
 
+        <receiver
+            android:name="com.julianogv.wifihelper.receivers.ButtonHandlerReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="com.julianogv.wifihelper.NO_ACTION" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.julianogv.wifihelper.YES_ACTION" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>
