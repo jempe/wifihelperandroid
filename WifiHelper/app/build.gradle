@@ -3,21 +3,39 @@ apply plugin: 'android'
 android {
     compileSdkVersion 19
     buildToolsVersion '19.0.1'
-
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 19
         versionCode 13
         versionName "2.0.1"
     }
+
+    signingConfigs {
+        debug {
+            storeFile file('c:/users/juliano.vieira/.android/debug.keystore')
+        }
+
+        releaseSign {
+            def propsFile = rootProject.file('C:/Users/juliano.vieira/Google Drive/android projects/wifihelper utils/keystore.properties')
+            def props = new Properties()
+            props.load(new FileInputStream(propsFile))
+
+            keyAlias props['keyAlias']
+            keyPassword props['keyPassword']
+            storeFile file(props['storeFile'])
+            storePassword props['storePassword']
+        }
+    }
+
     buildTypes {
         release {
+            signingConfig signingConfigs.releaseSign
             runProguard false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            debuggable false
         }
     }
 }
-
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.google.android.gms:play-services:+'
