@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Wifi Helper</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="app_name">WiFi Helper</string>
+
     <string name="action_settings">Settings</string>
+    <string name="tolerate">How much will you tolerate between wifi signals?</string>
+    <string name="working">It\'s already working!\n\nWait and when it finds a better WiFi signal you will be notified!</string>
 
 </resources>

@@ -51,7 +51,7 @@ public class MainActivity extends Activity {
 
         AlertDialog.Builder alertbox = new AlertDialog.Builder(this);
         alertbox.setNeutralButton("OK", null);
-        alertbox.setMessage("It's already working!\nWait and when it finds a better WiFi signal you will be notified!");
+        alertbox.setMessage(R.string.working);
         alertbox.setIcon(R.drawable.ic_launcher);
         alertbox.show();
     }
