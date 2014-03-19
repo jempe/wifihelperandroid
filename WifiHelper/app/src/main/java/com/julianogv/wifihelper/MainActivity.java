@@ -26,14 +26,14 @@ public class MainActivity extends Activity {
     TextView txtTolerate;
     SeekBar sbTolerate;
     Switch switchServiceStatus;
-    private InterstitialAd interstitialAds = null;
     Intent serviceIntent;
+    Context ctx;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        ctx = getApplicationContext();
         txtTolerate = (TextView) findViewById(R.id.txtTolerate);
         sbTolerate = (SeekBar)findViewById(R.id.seekBarTolerate);
         switchServiceStatus = (Switch)findViewById(R.id.switchServiceStatus);
@@ -43,9 +43,9 @@ public class MainActivity extends Activity {
         setBroadcastReceivers();
         startWifiManagerService();
 
-        this.interstitialAds = new InterstitialAd(this);
-        this.interstitialAds.setAdUnitId("ca-app-pub-1817810316504207/1298383595");
-        this.interstitialAds.setAdListener(new InterstitialAdListener(interstitialAds));
+        InterstitialAd interstitialAds = new InterstitialAd(this);
+        interstitialAds.setAdUnitId("ca-app-pub-1817810316504207/1298383595");
+        interstitialAds.setAdListener(new InterstitialAdListener(interstitialAds));
         com.google.android.gms.ads.AdRequest adRequest = new com.google.android.gms.ads.AdRequest.Builder().build();
         interstitialAds.loadAd(adRequest);
 
@@ -127,7 +127,7 @@ public class MainActivity extends Activity {
         public void onCheckedChanged(CompoundButton buttonView,
                                      boolean isChecked) {
             if(isChecked){
-                Toast.makeText(getApplicationContext(), "Starting service!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ctx, "Starting service!", Toast.LENGTH_SHORT).show();
                 startWifiManagerService();
             }else{
                 stopService(serviceIntent);
