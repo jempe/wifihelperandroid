@@ -49,11 +49,11 @@ public class MainActivity extends Activity {
         com.google.android.gms.ads.AdRequest adRequest = new com.google.android.gms.ads.AdRequest.Builder().build();
         interstitialAds.loadAd(adRequest);
 
-        AlertDialog.Builder alertbox = new AlertDialog.Builder(this);
-        alertbox.setNeutralButton("OK", null);
-        alertbox.setMessage(R.string.working);
-        alertbox.setIcon(R.drawable.ic_launcher);
-        alertbox.show();
+        AlertDialog.Builder alertBox = new AlertDialog.Builder(this);
+        alertBox.setNeutralButton("OK", null);
+        alertBox.setMessage(R.string.working);
+        alertBox.setIcon(R.drawable.ic_launcher);
+        alertBox.show();
     }
 
     @Override
