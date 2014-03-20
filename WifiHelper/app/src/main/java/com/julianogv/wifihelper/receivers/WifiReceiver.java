@@ -30,7 +30,7 @@ public class WifiReceiver extends BroadcastReceiver{
 
     String currentBSSID;
     ScanResult bestResult = null;
-    ScanResult currentWifi;
+    ScanResult currentWifi = null;
     WifiConfiguration wifiConfig = null;
     WifiConfiguration bestWifiConfig = null;
     public static int tolerate = 0;
@@ -96,7 +96,7 @@ public class WifiReceiver extends BroadcastReceiver{
 
         SharedPreferences settings = context.getSharedPreferences(Defines.PREFS_NAME, 0);
         tolerate = settings.getInt(Defines.TOLERATE_PREFS_NAME, 0);
-        if(bestResult == null){
+        if(bestResult == null || currentWifi == null || bestWifiConfig == null){
             WifiUtils.cancelNotification(context);
             return;
         }

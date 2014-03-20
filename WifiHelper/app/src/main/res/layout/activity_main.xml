@@ -18,9 +18,9 @@
         android:layout_column="1"
         android:text="0"
         android:gravity="center"
+        android:layout_alignBottom="@+id/seekBarTolerate"
         android:layout_alignRight="@+id/textView3"
-        android:layout_alignEnd="@+id/textView3"
-        android:layout_above="@+id/wifiListView" />
+        android:layout_alignEnd="@+id/textView3" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -32,8 +32,7 @@
         android:layout_columnSpan="2"
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:text="home1: -85\nhome2: -90" />
+        android:layout_alignParentRight="true" />
 
     <SeekBar
         android:layout_width="wrap_content"
@@ -42,11 +41,11 @@
         android:max="100"
         android:defaultValue="1"
         android:indeterminate="false"
-        android:layout_alignTop="@+id/txtTolerate"
+        android:layout_below="@+id/textView3"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_toLeftOf="@+id/switchServiceStatus"
-        android:layout_alignBottom="@+id/txtTolerate" />
+        android:layout_marginTop="15dp"
+        android:layout_toLeftOf="@+id/switchServiceStatus" />
 
     <Switch
         android:layout_width="wrap_content"
