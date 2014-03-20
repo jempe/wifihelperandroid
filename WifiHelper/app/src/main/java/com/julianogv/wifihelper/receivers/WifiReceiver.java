@@ -39,7 +39,6 @@ public class WifiReceiver extends BroadcastReceiver{
 
     }
 
-
     @Override
     public void onReceive(Context context, Intent intent) {
         //Toast.makeText(context, "Wifi Receiver", Toast.LENGTH_LONG).show();
