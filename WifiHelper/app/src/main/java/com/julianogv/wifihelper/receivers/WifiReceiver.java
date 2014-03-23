@@ -12,6 +12,7 @@ import android.net.NetworkInfo;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
+import android.support.v4.app.NotificationCompat;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
@@ -132,7 +133,7 @@ public class WifiReceiver extends BroadcastReceiver{
                 android.content.Intent.FLAG_ACTIVITY_NEW_TASK);
 
 
-        Notification.Builder mBuilder = new Notification.Builder(context)
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
                 .setSmallIcon(R.drawable.ic_launcher)
                 .setAutoCancel(true);
         RemoteViews contentView = new RemoteViews(context.getPackageName(), R.layout.notification_activity);
@@ -143,13 +144,13 @@ public class WifiReceiver extends BroadcastReceiver{
         //altera o conteudo do texto da notificacao
         contentView.setTextViewText(R.id.txtNotificationText, "Switch to: " + newWifi.SSID);
 
-        //todo: improve the way I do this
+        //todo: improve the way it's done
         contentView.setTextViewText(R.id.txtWifiInfo, "Current: " + currentWifi.SSID+": "
                 + currentWifi.level + "\nNew:      " + newWifi.SSID + ": " + newWifi.level);
 
         NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         manager.cancel(Defines.NOTIFICATION_ID);
-        manager.notify(Defines.NOTIFICATION_ID, mBuilder.getNotification());
+        manager.notify(Defines.NOTIFICATION_ID, mBuilder.build());
 
     }
 
