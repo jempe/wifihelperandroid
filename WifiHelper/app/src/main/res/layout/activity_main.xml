@@ -45,19 +45,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginTop="15dp"
-        android:layout_toLeftOf="@+id/switchServiceStatus" />
-
-    <Switch
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/switchServiceStatus"
-        android:checked="true"
-        android:clickable="true"
-        android:enabled="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:textOff="OFF"
-        android:textOn="ON" />
+        android:layout_toLeftOf="@+id/txtTolerate" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -66,10 +54,20 @@
         android:id="@+id/textView3"
         android:textColor="#4e4e4e"
         android:gravity="center"
+        android:layout_marginTop="38dp"
         android:layout_below="@+id/switchServiceStatus"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="34dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <ToggleButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New ToggleButton"
+        android:id="@+id/switchServiceStatus"
+        android:checked="false"
+        android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 </RelativeLayout>
