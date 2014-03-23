@@ -15,6 +15,7 @@ import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.google.android.gms.ads.InterstitialAd;
 import com.julianogv.wifihelper.listeners.InterstitialAdListener;
@@ -25,7 +26,7 @@ public class MainActivity extends Activity {
     BroadcastFillWifiInfo broadcastWifiInfo;
     TextView txtTolerate;
     SeekBar sbTolerate;
-    Switch switchServiceStatus;
+    ToggleButton switchServiceStatus;
     Intent serviceIntent;
     Context ctx;
 
@@ -36,8 +37,8 @@ public class MainActivity extends Activity {
         ctx = getApplicationContext();
         txtTolerate = (TextView) findViewById(R.id.txtTolerate);
         sbTolerate = (SeekBar)findViewById(R.id.seekBarTolerate);
-        switchServiceStatus = (Switch)findViewById(R.id.switchServiceStatus);
-
+        switchServiceStatus = (ToggleButton)findViewById(R.id.switchServiceStatus);
+        switchServiceStatus.setChecked(true);
         restoreSavedPreferences();
         prepareListeners();
         setBroadcastReceivers();
@@ -121,7 +122,7 @@ public class MainActivity extends Activity {
         }
     };
 
-    Switch.OnCheckedChangeListener switchHandlers = new Switch.OnCheckedChangeListener(){
+    ToggleButton.OnCheckedChangeListener switchHandlers = new ToggleButton.OnCheckedChangeListener(){
 
         @Override
         public void onCheckedChanged(CompoundButton buttonView,
