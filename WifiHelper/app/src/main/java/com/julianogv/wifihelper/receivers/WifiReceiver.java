@@ -26,7 +26,7 @@ import java.util.List;
  * Created by juliano.vieira on 18/03/14.
  */
 public class WifiReceiver extends BroadcastReceiver{
-    WifiManager mainWifi;
+    WifiManager wifiManager;
     List<ScanResult> wifiList;
 
     String currentBSSID;
@@ -34,6 +34,8 @@ public class WifiReceiver extends BroadcastReceiver{
     ScanResult currentWifi = null;
     WifiConfiguration wifiConfig = null;
     WifiConfiguration bestWifiConfig = null;
+    Boolean checkBoxAutoSwitch = false;
+
     public static int tolerate = 0;
 
     public WifiReceiver(){
@@ -44,9 +46,9 @@ public class WifiReceiver extends BroadcastReceiver{
     public void onReceive(Context context, Intent intent) {
         //Toast.makeText(context, "Wifi Receiver", Toast.LENGTH_LONG).show();
         StringBuilder sb = new StringBuilder();
-        mainWifi = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
+        wifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
 
-        if (mainWifi.getWifiState() != WifiManager.WIFI_STATE_ENABLED) {
+        if (wifiManager.getWifiState() != WifiManager.WIFI_STATE_ENABLED) {
             WifiUtils.cancelNotification(context);
             return;
         }
@@ -58,9 +60,9 @@ public class WifiReceiver extends BroadcastReceiver{
             return;
         }
 
-        wifiList = mainWifi.getScanResults();
+        wifiList = wifiManager.getScanResults();
 
-        currentBSSID = mainWifi.getConnectionInfo().getBSSID();
+        currentBSSID = wifiManager.getConnectionInfo().getBSSID();
 
         for (int i = 0; i < wifiList.size(); i++) {
             wifiConfig = WifiUtils.getConfiguredWifiBySSID("\"" + wifiList.get(i).SSID + "\"", context);
@@ -68,7 +70,7 @@ public class WifiReceiver extends BroadcastReceiver{
                 continue;
 
             //when it's the current wifi add a *
-            if(mainWifi.getConnectionInfo().getSSID().equals("\""+wifiList.get(i).SSID+"\"")){
+            if(wifiManager.getConnectionInfo().getSSID().equals("\""+wifiList.get(i).SSID+"\"")){
                 sb.append("*"+wifiList.get(i).SSID + ": " + wifiList.get(i).level + "\n");
             }else{
                 sb.append(wifiList.get(i).SSID + ": " + wifiList.get(i).level + "\n");
@@ -97,19 +99,25 @@ public class WifiReceiver extends BroadcastReceiver{
 
         SharedPreferences settings = context.getSharedPreferences(Defines.PREFS_NAME, 0);
         tolerate = settings.getInt(Defines.TOLERATE_PREFS_NAME, 0);
+        checkBoxAutoSwitch = settings.getBoolean(Defines.AUTO_SWITCH_PREFS_NAME, false);
+
         if(bestResult == null || currentWifi == null || bestWifiConfig == null){
             WifiUtils.cancelNotification(context);
             return;
         }
 
         int signalDiff = WifiManager.compareSignalLevel(currentWifi.level, bestResult.level);
-        boolean isHigherThanMinimum = (signalDiff+tolerate) < 0;
+        boolean isGreaterThanMinimum = (signalDiff+tolerate) < 0;
         //verify whether it has a better wifi or not
-        if (bestResult != null
-                && !bestResult.BSSID.equals(currentBSSID)
+        if (!bestResult.BSSID.equals(currentBSSID)
                 && signalDiff < 0
-                && isHigherThanMinimum){
-            createNotification(bestResult, currentWifi, context);
+                && isGreaterThanMinimum){
+            if(checkBoxAutoSwitch){
+                Toast.makeText(context, "Switching to: " + bestWifiConfig.SSID, Toast.LENGTH_LONG).show();
+                WifiUtils.connectToWifi(wifiManager, bestWifiConfig.networkId);
+            }else{
+                createNotification(bestResult, currentWifi, context);
+            }
             return;
         }
         //cancel old notifications
@@ -151,7 +159,5 @@ public class WifiReceiver extends BroadcastReceiver{
         NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         manager.cancel(Defines.NOTIFICATION_ID);
         manager.notify(Defines.NOTIFICATION_ID, mBuilder.build());
-
     }
-
 }

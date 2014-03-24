@@ -1,4 +1,4 @@
-package com.julianogv.wifihelper;
+    package com.julianogv.wifihelper;
 
 import android.app.NotificationManager;
 import android.content.Context;
@@ -28,5 +28,11 @@ public class WifiUtils {
                 return wifiConfigurations.get(i);
         }
         return null;
+    }
+
+    public static void connectToWifi(WifiManager wifiManager, int networkId) {
+        wifiManager.disconnect();
+        wifiManager.enableNetwork(networkId, true);
+        wifiManager.reconnect();
     }
 }

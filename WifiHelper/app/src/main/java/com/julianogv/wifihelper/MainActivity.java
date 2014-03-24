@@ -10,9 +10,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.SeekBar;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -29,12 +29,14 @@ public class MainActivity extends Activity {
     ToggleButton switchServiceStatus;
     Intent serviceIntent;
     Context ctx;
+    CheckBox checkBoxAutoSwitch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ctx = getApplicationContext();
+        checkBoxAutoSwitch = (CheckBox) findViewById(R.id.checkAutoSwitch);
         txtTolerate = (TextView) findViewById(R.id.txtTolerate);
         sbTolerate = (SeekBar)findViewById(R.id.seekBarTolerate);
         switchServiceStatus = (ToggleButton)findViewById(R.id.switchServiceStatus);
@@ -81,6 +83,7 @@ public class MainActivity extends Activity {
         SharedPreferences settings = getSharedPreferences(Defines.PREFS_NAME, 0);
         txtTolerate.setText(settings.getInt(Defines.TOLERATE_PREFS_NAME, 0) + "");
         sbTolerate.setProgress(settings.getInt(Defines.TOLERATE_PREFS_NAME, 0));
+        checkBoxAutoSwitch.setChecked(settings.getBoolean(Defines.AUTO_SWITCH_PREFS_NAME, false));
     }
 
     public void setBroadcastReceivers(){
@@ -99,6 +102,8 @@ public class MainActivity extends Activity {
     public void prepareListeners(){
         sbTolerate.setOnSeekBarChangeListener(seekBarTolerateOnSeekListener);
         switchServiceStatus.setOnCheckedChangeListener(switchHandlers);
+
+        checkBoxAutoSwitch.setOnCheckedChangeListener(checkBoxAutoSwitchHandler);
     }
 
     SeekBar.OnSeekBarChangeListener seekBarTolerateOnSeekListener = new SeekBar.OnSeekBarChangeListener(){
@@ -118,6 +123,17 @@ public class MainActivity extends Activity {
             SharedPreferences settings = getSharedPreferences(Defines.PREFS_NAME, 0);
             SharedPreferences.Editor editor = settings.edit();
             editor.putInt(Defines.TOLERATE_PREFS_NAME, Integer.parseInt(txtTolerate.getText().toString()));
+            editor.commit();
+        }
+    };
+
+    CheckBox.OnCheckedChangeListener checkBoxAutoSwitchHandler = new CheckBox.OnCheckedChangeListener(){
+
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            SharedPreferences settings = getSharedPreferences(Defines.PREFS_NAME, 0);
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putBoolean(Defines.AUTO_SWITCH_PREFS_NAME, isChecked);
             editor.commit();
         }
     };

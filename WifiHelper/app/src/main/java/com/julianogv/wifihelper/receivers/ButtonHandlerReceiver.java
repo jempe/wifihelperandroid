@@ -32,9 +32,7 @@ public class ButtonHandlerReceiver extends BroadcastReceiver {
                 WifiConfiguration wifiConfig =
                         WifiUtils.getConfiguredWifiBySSID("\"" + SSID + "\"", context);
 
-                mainWifi.disconnect();
-                mainWifi.enableNetwork(wifiConfig.networkId, true);
-                mainWifi.reconnect();
+                WifiUtils.connectToWifi(mainWifi, wifiConfig.networkId);
             }
         }
         WifiUtils.cancelNotification(context);

@@ -30,10 +30,13 @@
         android:layout_row="1"
         android:layout_column="1"
         android:layout_columnSpan="2"
+        android:layout_below="@+id/txtTolerate"
+        android:layout_marginTop="39dp"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:layout_below="@+id/txtTolerate" />
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/txtTolerate"
+        android:layout_alignEnd="@+id/txtTolerate"
+        android:layout_alignParentBottom="true" />
 
     <SeekBar
         android:layout_width="wrap_content"
@@ -70,5 +73,17 @@
         android:checked="false"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:textOn="STATUS"
+        android:textOff="STATUS" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Auto Switch"
+        android:id="@+id/checkAutoSwitch"
+        android:checked="false"
+        android:layout_above="@+id/textView3"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 </RelativeLayout>
