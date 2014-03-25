@@ -22,22 +22,6 @@
         android:layout_alignRight="@+id/textView3"
         android:layout_alignEnd="@+id/textView3" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="190dp"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:id="@+id/wifiListView"
-        android:layout_row="1"
-        android:layout_column="1"
-        android:layout_columnSpan="2"
-        android:layout_below="@+id/txtTolerate"
-        android:layout_marginTop="39dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/txtTolerate"
-        android:layout_alignEnd="@+id/txtTolerate"
-        android:layout_alignParentBottom="true" />
-
     <SeekBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -60,10 +44,10 @@
         android:gravity="center"
         android:layout_marginTop="38dp"
         android:layout_below="@+id/switchServiceStatus"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <ToggleButton
         android:layout_width="wrap_content"
@@ -86,4 +70,27 @@
         android:layout_above="@+id/textView3"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
+
+    <TextView
+        android:id="@+id/tv_header"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:text="WiFi List"
+        android:background="#a5bfff"
+        android:layout_below="@+id/txtTolerate"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="29dp"
+        android:textColor="#ffffff"
+        android:textStyle="bold" />
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/listWifi"
+        android:layout_below="@+id/tv_header"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 </RelativeLayout>

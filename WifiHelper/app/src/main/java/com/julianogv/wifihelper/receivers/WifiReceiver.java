@@ -1,6 +1,5 @@
 package com.julianogv.wifihelper.receivers;
 
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -20,6 +19,7 @@ import com.julianogv.wifihelper.Defines;
 import com.julianogv.wifihelper.R;
 import com.julianogv.wifihelper.WifiUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -61,7 +61,7 @@ public class WifiReceiver extends BroadcastReceiver{
         }
 
         wifiList = wifiManager.getScanResults();
-
+        ArrayList<String> arrayWifiInfo = new ArrayList<String>();
         currentBSSID = wifiManager.getConnectionInfo().getBSSID();
 
         for (int i = 0; i < wifiList.size(); i++) {
@@ -71,9 +71,9 @@ public class WifiReceiver extends BroadcastReceiver{
 
             //when it's the current wifi add a *
             if(wifiManager.getConnectionInfo().getSSID().equals("\""+wifiList.get(i).SSID+"\"")){
-                sb.append("*"+wifiList.get(i).SSID + ": " + wifiList.get(i).level + "\n");
+                arrayWifiInfo.add("*" + wifiList.get(i).SSID + ": " + wifiList.get(i).level);
             }else{
-                sb.append(wifiList.get(i).SSID + ": " + wifiList.get(i).level + "\n");
+                arrayWifiInfo.add(wifiList.get(i).SSID + ": " + wifiList.get(i).level);
             }
 
             //save current wifi
@@ -94,7 +94,7 @@ public class WifiReceiver extends BroadcastReceiver{
         Intent broadcastIntent = new Intent();
         broadcastIntent.setAction(Defines.FILL_DATA);
         broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
-        broadcastIntent.putExtra("data", sb.toString());
+        broadcastIntent.putStringArrayListExtra("data", arrayWifiInfo);
         context.sendBroadcast(broadcastIntent);
 
         SharedPreferences settings = context.getSharedPreferences(Defines.PREFS_NAME, 0);

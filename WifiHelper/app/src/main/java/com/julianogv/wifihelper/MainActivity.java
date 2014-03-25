@@ -10,8 +10,10 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,6 +32,7 @@ public class MainActivity extends Activity {
     Intent serviceIntent;
     Context ctx;
     CheckBox checkBoxAutoSwitch;
+    ListView wifiInfoListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +44,8 @@ public class MainActivity extends Activity {
         sbTolerate = (SeekBar)findViewById(R.id.seekBarTolerate);
         switchServiceStatus = (ToggleButton)findViewById(R.id.switchServiceStatus);
         switchServiceStatus.setChecked(true);
+        wifiInfoListView = (ListView)findViewById(R.id.listWifi);
+
         restoreSavedPreferences();
         prepareListeners();
         setBroadcastReceivers();
@@ -61,7 +66,7 @@ public class MainActivity extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        
+
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
@@ -156,9 +161,9 @@ public class MainActivity extends Activity {
     public class BroadcastFillWifiInfo extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            TextView txtWifiInfo = (TextView) findViewById(R.id.wifiListView);
-            String data = intent.getStringExtra("data");
-            txtWifiInfo.setText(data);
+            //TextView txtWifiInfo = (TextView) findViewById(R.id.wifiListView);
+            //String data = intent.getStringExtra("data");
+            //stxtWifiInfo.setText(data);
         }
     }
 }
