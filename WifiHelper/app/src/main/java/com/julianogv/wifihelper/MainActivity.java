@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.julianogv.wifihelper.listeners.InterstitialAdListener;
 import com.julianogv.wifihelper.services.WifiManagerService;
@@ -48,17 +49,6 @@ public class MainActivity extends Activity {
         switchServiceStatus.setChecked(true);
         wifiInfoListView = (ListView)findViewById(R.id.listWifi);
 
-    /*
-        ArrayList<String> your_array_list = new ArrayList<String>();
-        your_array_list.add("CRISTOVAO");
-        your_array_list.add("HOMEVR");
-
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-                this,
-                android.R.layout.simple_list_item_1,
-                your_array_list );
-        wifiInfoListView.setAdapter(arrayAdapter);
-    */
         restoreSavedPreferences();
         prepareListeners();
         setBroadcastReceivers();
@@ -67,7 +57,7 @@ public class MainActivity extends Activity {
         InterstitialAd interstitialAds = new InterstitialAd(this);
         interstitialAds.setAdUnitId("ca-app-pub-1817810316504207/1298383595");
         interstitialAds.setAdListener(new InterstitialAdListener(interstitialAds));
-        com.google.android.gms.ads.AdRequest adRequest = new com.google.android.gms.ads.AdRequest.Builder().build();
+        AdRequest adRequest = new AdRequest.Builder().build();
         interstitialAds.loadAd(adRequest);
 
         AlertDialog.Builder alertBox = new AlertDialog.Builder(this);
