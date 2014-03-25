@@ -46,13 +46,12 @@ public class WifiReceiver extends BroadcastReceiver{
     public void onReceive(Context context, Intent intent) {
         long delay = (System.currentTimeMillis() - startMili);
         if (delay < Defines.WIFI_RECEIVER_DELAY){
-            //
+            //minimum delay to receive wifi scan results, sometimes multiple SCAN_RESULTS are sent
             return;
         }
         startMili = System.currentTimeMillis();
-        Toast.makeText(context, "Wifi Receiver: " + delay, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(context, "Wifi Receiver: " + delay, Toast.LENGTH_SHORT).show();
         wifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
-
 
         if (!wifiManager.isWifiEnabled()) {
             WifiUtils.cancelNotification(context);
