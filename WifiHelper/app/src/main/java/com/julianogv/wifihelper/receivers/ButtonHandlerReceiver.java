@@ -19,20 +19,22 @@ public class ButtonHandlerReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
-        String SSID = intent.getStringExtra("ssid");
 
         if(action.equals(Defines.YES_ACTION)) {
-            WifiManager mainWifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+            String SSID = intent.getStringExtra("ssid");
+            WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+            if(wifiManager.isWifiEnabled()){
+                ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo currentWifiConnectivityManager = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
 
-            ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo currentWifiConnectivityManager = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+                if (currentWifiConnectivityManager != null &&
+                        currentWifiConnectivityManager.isConnected()) {
 
-            if (currentWifiConnectivityManager != null && currentWifiConnectivityManager.isConnected()) {
+                    WifiConfiguration wifiConfig =
+                            WifiUtils.getConfiguredWifiBySSID("\"" + SSID + "\"", context);
 
-                WifiConfiguration wifiConfig =
-                        WifiUtils.getConfiguredWifiBySSID("\"" + SSID + "\"", context);
-
-                WifiUtils.connectToWifi(mainWifi, wifiConfig.networkId);
+                    WifiUtils.connectToWifi(wifiManager, wifiConfig.networkId);
+                }
             }
         }
         WifiUtils.cancelNotification(context);

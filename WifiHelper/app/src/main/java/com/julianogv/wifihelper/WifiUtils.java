@@ -32,7 +32,7 @@ public class WifiUtils {
 
     public static void connectToWifi(WifiManager wifiManager, int networkId) {
         wifiManager.disconnect();
-        wifiManager.enableNetwork(networkId, false);
+        wifiManager.enableNetwork(networkId, true);
         wifiManager.reconnect();
     }
 }

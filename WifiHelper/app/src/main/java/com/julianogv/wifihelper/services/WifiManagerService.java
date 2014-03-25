@@ -16,19 +16,18 @@ import com.julianogv.wifihelper.receivers.WifiReceiver;
  * Created by juliano.vieira on 18/03/14.
  */
 public class WifiManagerService extends Service{
-    WifiManager mainWifi;
+    WifiManager wifiManager;
     Context ctx;
     private static int tolerate = 0;
     private boolean running = false;
-    private final int delay = 25000;
     private Handler handler;
     WifiReceiver receiverWifi;
 
     private Runnable wifiStartScanRunnable = new Runnable() {
         @Override
         public void run() {
-            mainWifi.startScan();
-            handler.postDelayed(this, delay);
+            wifiManager.startScan();
+            handler.postDelayed(this, Defines.DELAY);
         }
     };
 
@@ -47,15 +46,15 @@ public class WifiManagerService extends Service{
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         running = true;
-        mainWifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         registerReceivers();
 
         //I've heard its better to use handler than timer
         handler = new Handler();
         handler.removeCallbacks(wifiStartScanRunnable);
-        handler.postDelayed(wifiStartScanRunnable, delay);
+        handler.postDelayed(wifiStartScanRunnable, Defines.DELAY);
 
-        mainWifi.startScan();
+        wifiManager.startScan();
         return super.onStartCommand(intent, flags, startId);
     }
 

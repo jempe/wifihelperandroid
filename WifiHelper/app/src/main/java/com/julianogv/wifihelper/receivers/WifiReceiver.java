@@ -35,7 +35,7 @@ public class WifiReceiver extends BroadcastReceiver{
     WifiConfiguration wifiConfig = null;
     WifiConfiguration bestWifiConfig = null;
     Boolean checkBoxAutoSwitch = false;
-
+    long startMili = System.currentTimeMillis();
     public static int tolerate = 0;
 
     public WifiReceiver(){
@@ -44,11 +44,17 @@ public class WifiReceiver extends BroadcastReceiver{
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        //Toast.makeText(context, "Wifi Receiver", Toast.LENGTH_LONG).show();
-        StringBuilder sb = new StringBuilder();
+        long delay = (System.currentTimeMillis() - startMili);
+        if (delay < Defines.WIFI_RECEIVER_DELAY){
+            //
+            return;
+        }
+        startMili = System.currentTimeMillis();
+        Toast.makeText(context, "Wifi Receiver: " + delay, Toast.LENGTH_SHORT).show();
         wifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
 
-        if (wifiManager.getWifiState() != WifiManager.WIFI_STATE_ENABLED) {
+
+        if (!wifiManager.isWifiEnabled()) {
             WifiUtils.cancelNotification(context);
             return;
         }
@@ -71,7 +77,7 @@ public class WifiReceiver extends BroadcastReceiver{
 
             //when it's the current wifi add a *
             if(wifiManager.getConnectionInfo().getSSID().equals("\""+wifiList.get(i).SSID+"\"")){
-                arrayWifiInfo.add("*" + wifiList.get(i).SSID + ": " + wifiList.get(i).level);
+                arrayWifiInfo.add(wifiList.get(i).SSID + ": " + wifiList.get(i).level + "*");
             }else{
                 arrayWifiInfo.add(wifiList.get(i).SSID + ": " + wifiList.get(i).level);
             }
@@ -125,7 +131,6 @@ public class WifiReceiver extends BroadcastReceiver{
     }
 
     public void createNotification(ScanResult newWifi, ScanResult currentWifi, Context context){
-
         //yesButton Listener
         Intent yesButtonIntent = new Intent(context, ButtonHandlerReceiver.class);
         yesButtonIntent.setAction(Defines.YES_ACTION);
