@@ -174,20 +174,9 @@ public class MainActivity extends Activity {
     public class BroadcastFillWifiInfo extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            //TextView txtWifiInfo = (TextView) findViewById(R.id.wifiListView);
-            //String data = intent.getStringExtra("data");
-            //stxtWifiInfo.setText(data);
-
             ArrayList<String> extraArray = intent.getStringArrayListExtra("data");
-
-
-            ArrayList<String> your_array_list = new ArrayList<String>();
-            your_array_list.add("foo");
-            your_array_list.add("bar");
-
             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(ctx,
                     android.R.layout.simple_list_item_1, extraArray);
-
             wifiInfoListView.setAdapter(arrayAdapter);
         }
     }
