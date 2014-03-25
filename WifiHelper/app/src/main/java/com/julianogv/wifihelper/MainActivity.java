@@ -10,7 +10,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ListView;
@@ -22,6 +22,8 @@ import android.widget.ToggleButton;
 import com.google.android.gms.ads.InterstitialAd;
 import com.julianogv.wifihelper.listeners.InterstitialAdListener;
 import com.julianogv.wifihelper.services.WifiManagerService;
+
+import java.util.ArrayList;
 
 public class MainActivity extends Activity {
 
@@ -38,7 +40,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ctx = getApplicationContext();
+        ctx = this;
         checkBoxAutoSwitch = (CheckBox) findViewById(R.id.checkAutoSwitch);
         txtTolerate = (TextView) findViewById(R.id.txtTolerate);
         sbTolerate = (SeekBar)findViewById(R.id.seekBarTolerate);
@@ -46,6 +48,17 @@ public class MainActivity extends Activity {
         switchServiceStatus.setChecked(true);
         wifiInfoListView = (ListView)findViewById(R.id.listWifi);
 
+    /*
+        ArrayList<String> your_array_list = new ArrayList<String>();
+        your_array_list.add("CRISTOVAO");
+        your_array_list.add("HOMEVR");
+
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+                this,
+                android.R.layout.simple_list_item_1,
+                your_array_list );
+        wifiInfoListView.setAdapter(arrayAdapter);
+    */
         restoreSavedPreferences();
         prepareListeners();
         setBroadcastReceivers();
@@ -164,6 +177,18 @@ public class MainActivity extends Activity {
             //TextView txtWifiInfo = (TextView) findViewById(R.id.wifiListView);
             //String data = intent.getStringExtra("data");
             //stxtWifiInfo.setText(data);
+
+            ArrayList<String> extraArray = intent.getStringArrayListExtra("data");
+
+
+            ArrayList<String> your_array_list = new ArrayList<String>();
+            your_array_list.add("foo");
+            your_array_list.add("bar");
+
+            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(ctx,
+                    android.R.layout.simple_list_item_1, extraArray);
+
+            wifiInfoListView.setAdapter(arrayAdapter);
         }
     }
 }

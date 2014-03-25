@@ -90,7 +90,6 @@ public class WifiReceiver extends BroadcastReceiver{
             }
         }
 
-        //Todo: should use an array instead string builder
         Intent broadcastIntent = new Intent();
         broadcastIntent.setAction(Defines.FILL_DATA);
         broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
