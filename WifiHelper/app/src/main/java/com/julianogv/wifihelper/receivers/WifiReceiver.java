@@ -37,7 +37,8 @@ public class WifiReceiver extends BroadcastReceiver{
     Boolean checkBoxAutoSwitch = false;
     long startMili = System.currentTimeMillis();
     public static int tolerate = 0;
-
+    ArrayList<String> arrayWifiInfo;
+    Context ctx;
     public WifiReceiver(){
 
     }
@@ -49,11 +50,14 @@ public class WifiReceiver extends BroadcastReceiver{
             //minimum delay to receive wifi scan results, sometimes multiple SCAN_RESULTS are sent
             return;
         }
+        ctx = context;
+        arrayWifiInfo = new ArrayList<String>();
         startMili = System.currentTimeMillis();
         //Toast.makeText(context, "Wifi Receiver: " + delay, Toast.LENGTH_SHORT).show();
         wifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
 
         if (!wifiManager.isWifiEnabled()) {
+            sendBroadcastToFillWifiList(arrayWifiInfo);
             WifiUtils.cancelNotification(context);
             return;
         }
@@ -66,7 +70,6 @@ public class WifiReceiver extends BroadcastReceiver{
         }
 
         wifiList = wifiManager.getScanResults();
-        ArrayList<String> arrayWifiInfo = new ArrayList<String>();
         currentBSSID = wifiManager.getConnectionInfo().getBSSID();
 
         for (int i = 0; i < wifiList.size(); i++) {
@@ -94,12 +97,7 @@ public class WifiReceiver extends BroadcastReceiver{
                 bestWifiConfig = wifiConfig;
             }
         }
-
-        Intent broadcastIntent = new Intent();
-        broadcastIntent.setAction(Defines.FILL_DATA);
-        broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
-        broadcastIntent.putStringArrayListExtra("data", arrayWifiInfo);
-        context.sendBroadcast(broadcastIntent);
+        sendBroadcastToFillWifiList(arrayWifiInfo);
 
         SharedPreferences settings = context.getSharedPreferences(Defines.PREFS_NAME, 0);
         tolerate = settings.getInt(Defines.TOLERATE_PREFS_NAME, 0);
@@ -127,6 +125,14 @@ public class WifiReceiver extends BroadcastReceiver{
         //cancel old notifications
         WifiUtils.cancelNotification(context);
         return;
+    }
+
+    private void sendBroadcastToFillWifiList(ArrayList<String> arrayWifiInfo) {
+        Intent broadcastIntent = new Intent();
+        broadcastIntent.setAction(Defines.FILL_DATA);
+        broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
+        broadcastIntent.putStringArrayListExtra("data", arrayWifiInfo);
+        this.ctx.sendBroadcast(broadcastIntent);
     }
 
     public void createNotification(ScanResult newWifi, ScanResult currentWifi, Context context){
