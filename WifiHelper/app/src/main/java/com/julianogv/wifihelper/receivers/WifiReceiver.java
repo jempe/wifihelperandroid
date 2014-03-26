@@ -117,6 +117,7 @@ public class WifiReceiver extends BroadcastReceiver{
             if(checkBoxAutoSwitch){
                 Toast.makeText(context, "Switching to: " + bestWifiConfig.SSID, Toast.LENGTH_LONG).show();
                 WifiUtils.connectToWifi(wifiManager, bestWifiConfig.networkId);
+                WifiUtils.cancelNotification(context);
             }else{
                 createNotification(bestResult, currentWifi, context);
             }

@@ -58,8 +58,8 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:textOn="STATUS"
-        android:textOff="STATUS" />
+        android:textOn="Running"
+        android:textOff="Stopped" />
 
     <CheckBox
         android:layout_width="wrap_content"
