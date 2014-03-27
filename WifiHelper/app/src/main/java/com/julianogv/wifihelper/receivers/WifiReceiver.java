@@ -26,18 +26,11 @@ import java.util.List;
  * Created by juliano.vieira on 18/03/14.
  */
 public class WifiReceiver extends BroadcastReceiver{
-    WifiManager wifiManager;
-    List<ScanResult> wifiList;
 
-    String currentBSSID;
-    ScanResult bestResult = null;
-    ScanResult currentWifi = null;
-    WifiConfiguration wifiConfig = null;
-    WifiConfiguration bestWifiConfig = null;
     Boolean checkBoxAutoSwitch = false;
     long startMili = System.currentTimeMillis();
     public static int tolerate = 0;
-    ArrayList<String> arrayWifiInfo;
+
     Context ctx;
     public WifiReceiver(){
 
@@ -45,16 +38,24 @@ public class WifiReceiver extends BroadcastReceiver{
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        long delay = (System.currentTimeMillis() - startMili);
-        if (delay < Defines.WIFI_RECEIVER_DELAY){
+
+        if ((System.currentTimeMillis() - startMili) < Defines.WIFI_RECEIVER_DELAY){
             //minimum delay to receive wifi scan results, sometimes multiple SCAN_RESULTS are sent
             return;
         }
+
+        WifiConfiguration wifiConfig = null;
+        String currentBSSID;
+        ScanResult currentWifi = null;
+        ScanResult bestResult = null;
+        WifiConfiguration bestWifiConfig = null;
+        List<ScanResult> wifiList;
+
         ctx = context;
-        arrayWifiInfo = new ArrayList<String>();
+        ArrayList<String> arrayWifiInfo = new ArrayList<String>();
         startMili = System.currentTimeMillis();
         //Toast.makeText(context, "Wifi Receiver: " + delay, Toast.LENGTH_SHORT).show();
-        wifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
 
         if (!wifiManager.isWifiEnabled()) {
             sendBroadcastToFillWifiList(arrayWifiInfo);

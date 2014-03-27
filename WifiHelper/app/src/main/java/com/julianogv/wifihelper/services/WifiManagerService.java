@@ -52,7 +52,7 @@ public class WifiManagerService extends Service{
         //I've heard its better to use handler than timer
         handler = new Handler();
         handler.removeCallbacks(wifiStartScanRunnable);
-        handler.postDelayed(wifiStartScanRunnable, Defines.DELAY);
+        handler.postDelayed(wifiStartScanRunnable, Defines.WIFI_RECEIVER_DELAY+1);
 
         wifiManager.startScan();
         return super.onStartCommand(intent, flags, startId);
