@@ -13,10 +13,14 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import com.julianogv.wifihelper.Defines;
+import com.julianogv.wifihelper.MainActivity;
 import com.julianogv.wifihelper.R;
 import com.julianogv.wifihelper.WifiUtils;
 
@@ -29,7 +33,6 @@ import java.util.List;
 public class WifiReceiver extends BroadcastReceiver{
 
     Boolean checkBoxAutoSwitch = false;
-    long startMili = System.currentTimeMillis();
     public static int tolerate = 0;
     WifiManager wifiManager;
     ArrayList<String> arrayWifiInfo;
@@ -41,18 +44,8 @@ public class WifiReceiver extends BroadcastReceiver{
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        boolean isDebuggable = (0 !=(context.getApplicationInfo().flags &= ApplicationInfo.FLAG_DEBUGGABLE));
-        if(isDebuggable){
-            Toast.makeText(context, "WIFIRECEIVER", Toast.LENGTH_SHORT).show();
-        }
-
-        if ((System.currentTimeMillis() - startMili) < Defines.WIFI_RECEIVER_DELAY){
-            //minimum delay to receive wifi scan results, sometimes multiple SCAN_RESULTS are sent
-            return;
-        }
 
         WifiConfiguration wifiConfig;
-        String currentBSSID;
         ScanResult currentWifi = null;
         ScanResult bestResult = null;
         WifiConfiguration bestWifiConfig = null;
@@ -60,13 +53,12 @@ public class WifiReceiver extends BroadcastReceiver{
         ctx = context;
 
         arrayWifiInfo = new ArrayList<String>();
-        startMili = System.currentTimeMillis();
-        //Toast.makeText(context, "Wifi Receiver: " + delay, Toast.LENGTH_SHORT).show();
         wifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
+        wifiList = wifiManager.getScanResults();
 
-        if (!wifiManager.isWifiEnabled()) {
-            sendBroadcastToFillWifiList(arrayWifiInfo);
-            WifiUtils.cancelNotification(context);
+        if (!wifiManager.isWifiEnabled() || wifiList.size() < 1 ) {
+           sendBroadcastToFillWifiList(arrayWifiInfo);
+           WifiUtils.cancelNotification(context);
             return;
         }
 
@@ -79,61 +71,56 @@ public class WifiReceiver extends BroadcastReceiver{
             return;
         }
 
-        wifiList = wifiManager.getScanResults();
+        for (int i = 0; i < wifiList.size(); i++) {
+            wifiConfig = WifiUtils.getConfiguredWifiBySSID("\"" + wifiList.get(i).SSID + "\"", context);
+            if (wifiConfig == null)
+                continue;
 
-        if(wifiList.size() > 0) {
-
-            for (int i = 0; i < wifiList.size(); i++) {
-                wifiConfig = WifiUtils.getConfiguredWifiBySSID("\"" + wifiList.get(i).SSID + "\"", context);
-                if (wifiConfig == null)
-                    continue;
-
-                //when it's the current wifi add a *
-                if (wifiManager.getConnectionInfo().getSSID().equals("\"" + wifiList.get(i).SSID + "\"")) {
-                    arrayWifiInfo.add(wifiList.get(i).SSID + ": " + wifiList.get(i).level + "*");
-                } else {
-                    arrayWifiInfo.add(wifiList.get(i).SSID + ": " + wifiList.get(i).level);
-                }
-
-                //save current wifi
-                if (wifiManager.getConnectionInfo().getBSSID().equals(wifiList.get(i).BSSID)) {
-                    currentWifi = wifiList.get(i);
-                    continue;
-                }
-
-                //save the best result
-                if (bestResult == null &&
-                        WifiManager.compareSignalLevel(bestResult.level, wifiList.get(i).level) < 0) {
-                    bestResult = wifiList.get(i);
-                    bestWifiConfig = wifiConfig;
-                }
+            //when it's the current wifi add a *
+            if (wifiManager.getConnectionInfo().getSSID().equals("\"" + wifiList.get(i).SSID + "\"")) {
+                arrayWifiInfo.add(wifiList.get(i).SSID + ": " + wifiList.get(i).level + "*");
+            } else {
+                arrayWifiInfo.add(wifiList.get(i).SSID + ": " + wifiList.get(i).level);
             }
 
-            sendBroadcastToFillWifiList(arrayWifiInfo);
-            if(bestResult == null){
-                WifiUtils.cancelNotification(context);
+            //save current wifi
+            if (wifiManager.getConnectionInfo().getBSSID().equals(wifiList.get(i).BSSID)) {
+                currentWifi = wifiList.get(i);
+                continue;
+            }
+
+            //save the best result
+            if (bestResult == null ||
+                    WifiManager.compareSignalLevel(bestResult.level, wifiList.get(i).level) < 0) {
+                bestResult = wifiList.get(i);
+                bestWifiConfig = wifiConfig;
+            }
+        }
+
+        sendBroadcastToFillWifiList(arrayWifiInfo);
+        if(bestResult == null){
+            WifiUtils.cancelNotification(context);
+            return;
+        }
+
+        settings = context.getSharedPreferences(Defines.PREFS_NAME, 0);
+        tolerate = settings.getInt(Defines.TOLERATE_PREFS_NAME, 0);
+
+        int signalDiff = WifiManager.compareSignalLevel(currentWifi.level, bestResult.level);
+        boolean isGreaterThanMinimum = (signalDiff+tolerate) < 0;
+
+        //verify whether it has a better wifi or not
+        if (!bestResult.BSSID.equals(wifiManager.getConnectionInfo().getBSSID())
+                && isGreaterThanMinimum){
+            checkBoxAutoSwitch = settings.getBoolean(Defines.AUTO_SWITCH_PREFS_NAME, false);
+
+            if(checkBoxAutoSwitch){
+                //auto switch is checked it's not necessary to create a notification
+                Toast.makeText(context, "Switching to: " + bestWifiConfig.SSID, Toast.LENGTH_LONG).show();
+                WifiUtils.connectToWifi(wifiManager, bestWifiConfig.networkId);
+            }else{
+                createNotification(bestResult, currentWifi, context);
                 return;
-            }
-
-            settings = context.getSharedPreferences(Defines.PREFS_NAME, 0);
-            tolerate = settings.getInt(Defines.TOLERATE_PREFS_NAME, 0);
-
-            int signalDiff = WifiManager.compareSignalLevel(currentWifi.level, bestResult.level);
-            boolean isGreaterThanMinimum = (signalDiff+tolerate) < 0;
-
-            //verify whether it has a better wifi or not
-            if (!bestResult.BSSID.equals(wifiManager.getConnectionInfo().getBSSID())
-                    && isGreaterThanMinimum){
-                checkBoxAutoSwitch = settings.getBoolean(Defines.AUTO_SWITCH_PREFS_NAME, false);
-
-                if(checkBoxAutoSwitch){
-                    //auto switch is checked it's not necessary to create a notification
-                    Toast.makeText(context, "Switching to: " + bestWifiConfig.SSID, Toast.LENGTH_LONG).show();
-                    WifiUtils.connectToWifi(wifiManager, bestWifiConfig.networkId);
-                }else{
-                    createNotification(bestResult, currentWifi, context);
-                    return;
-                }
             }
         }
         //cancel old notifications
@@ -142,11 +129,9 @@ public class WifiReceiver extends BroadcastReceiver{
     }
 
     private void sendBroadcastToFillWifiList(ArrayList<String> arrayWifiInfo) {
-        Intent broadcastIntent = new Intent();
-        broadcastIntent.setAction(Defines.FILL_DATA);
-        broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
+        Intent broadcastIntent = new Intent(Defines.FILL_DATA);
         broadcastIntent.putStringArrayListExtra("data", arrayWifiInfo);
-        this.ctx.sendBroadcast(broadcastIntent);
+        ctx.sendBroadcast(broadcastIntent);
     }
 
     public void createNotification(ScanResult newWifi, ScanResult currentWifi, Context context){

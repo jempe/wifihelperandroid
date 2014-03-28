@@ -47,12 +47,12 @@ public class MainActivity extends Activity {
         }
     };
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         ctx = this;
         checkBoxAutoSwitch = (CheckBox) findViewById(R.id.checkAutoSwitch);
         txtTolerate = (TextView) findViewById(R.id.txtTolerate);
@@ -65,7 +65,6 @@ public class MainActivity extends Activity {
         prepareListeners();
         setBroadcastReceivers();
         startWifiScanThread();
-
 
         InterstitialAd interstitialAds = new InterstitialAd(this);
         interstitialAds.setAdUnitId("ca-app-pub-1817810316504207/1298383595");
@@ -81,16 +80,16 @@ public class MainActivity extends Activity {
     }
 
     @Override
+    protected void onDestroy() {
+        unregisterReceiver(broadcastWifiInfo);
+        super.onDestroy();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
-    }
-
-    @Override
-    protected void onStop() {
-        //unregisterReceiver(broadcastWifiInfo);
-        super.onStop();
     }
 
     @Override
@@ -116,11 +115,11 @@ public class MainActivity extends Activity {
         //receiver responsable for filling wifi list at main activity
         broadcastWifiInfo = new BroadcastFillWifiInfo();
         IntentFilter intentFilter = new IntentFilter(Defines.FILL_DATA);
-        intentFilter.addCategory(Intent.CATEGORY_DEFAULT);
+        //intentFilter.addCategory(Intent.CATEGORY_DEFAULT);
         registerReceiver(broadcastWifiInfo, intentFilter);
 
-        WifiReceiver wifiReceiver = new WifiReceiver();
-        registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+        //WifiReceiver wifiReceiver = new WifiReceiver();
+        //registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
     }
 
     public void startWifiScanThread(){
@@ -187,9 +186,8 @@ public class MainActivity extends Activity {
     public class BroadcastFillWifiInfo extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            ArrayList<String> extraArray = intent.getStringArrayListExtra("data");
             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(ctx,
-                    android.R.layout.simple_list_item_1, extraArray);
+                    android.R.layout.simple_list_item_1, intent.getStringArrayListExtra("data"));
             wifiInfoListView.setAdapter(arrayAdapter);
         }
     }
