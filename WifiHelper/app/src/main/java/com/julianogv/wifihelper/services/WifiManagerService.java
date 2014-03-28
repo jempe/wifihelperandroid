@@ -47,7 +47,7 @@ public class WifiManagerService extends Service{
     public int onStartCommand(Intent intent, int flags, int startId) {
         running = true;
         wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-        registerReceivers();
+        //registerReceivers();
 
         //I've heard its better to use handler than timer
         handler = new Handler();

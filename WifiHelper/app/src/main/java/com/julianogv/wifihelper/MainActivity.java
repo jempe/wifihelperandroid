@@ -22,6 +22,7 @@ import android.widget.ToggleButton;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.julianogv.wifihelper.listeners.InterstitialAdListener;
+import com.julianogv.wifihelper.receivers.WifiReceiver;
 import com.julianogv.wifihelper.services.WifiManagerService;
 
 import java.util.ArrayList;
@@ -41,6 +42,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         ctx = this;
         checkBoxAutoSwitch = (CheckBox) findViewById(R.id.checkAutoSwitch);
         txtTolerate = (TextView) findViewById(R.id.txtTolerate);
