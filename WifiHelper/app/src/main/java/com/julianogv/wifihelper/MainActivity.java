@@ -7,7 +7,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
@@ -23,20 +25,28 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.julianogv.wifihelper.listeners.InterstitialAdListener;
 import com.julianogv.wifihelper.receivers.WifiReceiver;
-import com.julianogv.wifihelper.services.WifiManagerService;
 
 import java.util.ArrayList;
 
 public class MainActivity extends Activity {
-
+    WifiManager wifiManager;
+    private Handler handler;
     BroadcastFillWifiInfo broadcastWifiInfo;
     TextView txtTolerate;
     SeekBar sbTolerate;
     ToggleButton switchServiceStatus;
-    Intent serviceIntent;
     Context ctx;
     CheckBox checkBoxAutoSwitch;
     ListView wifiInfoListView;
+
+    private Runnable wifiStartScanRunnable = new Runnable() {
+        @Override
+        public void run() {
+            wifiManager.startScan();
+            handler.postDelayed(this, Defines.DELAY);
+        }
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +64,8 @@ public class MainActivity extends Activity {
         restoreSavedPreferences();
         prepareListeners();
         setBroadcastReceivers();
-        startWifiManagerService();
+        startWifiScanThread();
+
 
         InterstitialAd interstitialAds = new InterstitialAd(this);
         interstitialAds.setAdUnitId("ca-app-pub-1817810316504207/1298383595");
@@ -71,10 +82,15 @@ public class MainActivity extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
+    }
+
+    @Override
+    protected void onStop() {
+        //unregisterReceiver(broadcastWifiInfo);
+        super.onStop();
     }
 
     @Override
@@ -102,11 +118,16 @@ public class MainActivity extends Activity {
         IntentFilter intentFilter = new IntentFilter(Defines.FILL_DATA);
         intentFilter.addCategory(Intent.CATEGORY_DEFAULT);
         registerReceiver(broadcastWifiInfo, intentFilter);
+
+        WifiReceiver wifiReceiver = new WifiReceiver();
+        registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
     }
 
-    public void startWifiManagerService(){
-        serviceIntent = new Intent(this, WifiManagerService.class);
-        startService(serviceIntent);
+    public void startWifiScanThread(){
+        //I've heard its better to use handler than timer
+        handler = new Handler();
+        handler.removeCallbacks(wifiStartScanRunnable);
+        handler.postDelayed(wifiStartScanRunnable, Defines.WIFI_RECEIVER_DELAY+1);
     }
 
     public void prepareListeners(){
@@ -155,9 +176,9 @@ public class MainActivity extends Activity {
                                      boolean isChecked) {
             if(isChecked){
                 Toast.makeText(ctx, "Starting service!", Toast.LENGTH_SHORT).show();
-                startWifiManagerService();
+                startWifiScanThread();
             }else{
-                stopService(serviceIntent);
+                handler.removeCallbacks(wifiStartScanRunnable);
             }
         }
 
