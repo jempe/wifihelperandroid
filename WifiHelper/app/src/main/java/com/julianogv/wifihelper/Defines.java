@@ -12,6 +12,7 @@ public class Defines {
     public static final String PREFS_NAME = "WIFI_HELPER_PREFERENCES";
     public static final String TOLERATE_PREFS_NAME = "TOLERATE_PREFS";
     public static final String AUTO_SWITCH_PREFS_NAME = "AUTO_SWITCH_PREFS";
-    public static final int WIFI_SCAN_RESULTS_DELAY = 25000;
+    public static final int WIFI_SCAN_RESULTS_DELAY = 22000;
+    public static final String SHOULD_RUN = "RUNNING_PREFS";
 }
 

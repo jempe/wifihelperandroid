@@ -12,6 +12,7 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
@@ -39,6 +40,13 @@ public class WifiReceiver extends BroadcastReceiver{
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        settings = context.getSharedPreferences(Defines.PREFS_NAME, 0);
+        //
+        Log.d("GALHIEGO", "SCAN RESULTS RECEIVED");
+        if(!settings.getBoolean(Defines.SHOULD_RUN, true)){
+            Log.d("GALHIEGO", "SHOULD RUN = FALSE");
+            return;
+        }
         WifiConfiguration wifiConfig;
         ScanResult currentWifi = null;
         ScanResult bestResult = null;
@@ -96,8 +104,6 @@ public class WifiReceiver extends BroadcastReceiver{
             WifiUtils.cancelNotification(context);
             return;
         }
-
-        settings = context.getSharedPreferences(Defines.PREFS_NAME, 0);
         tolerate = settings.getInt(Defines.TOLERATE_PREFS_NAME, 0);
 
         int signalDiff = WifiManager.compareSignalLevel(currentWifi.level, bestResult.level);
@@ -159,7 +165,6 @@ public class WifiReceiver extends BroadcastReceiver{
                 + newWifi.level);
 
         NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        //manager.cancel(Defines.NOTIFICATION_ID);
         manager.notify(Defines.NOTIFICATION_ID, mBuilder.build());
     }
 }

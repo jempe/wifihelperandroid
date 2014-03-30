@@ -24,9 +24,6 @@ import android.widget.ToggleButton;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.julianogv.wifihelper.listeners.InterstitialAdListener;
-import com.julianogv.wifihelper.receivers.WifiReceiver;
-
-import java.util.ArrayList;
 
 public class MainActivity extends Activity {
     WifiManager wifiManager;
@@ -39,6 +36,8 @@ public class MainActivity extends Activity {
     CheckBox checkBoxAutoSwitch;
     ListView wifiInfoListView;
     public static long delay = 0;
+    SharedPreferences settings;
+    SharedPreferences.Editor preferencesEditor;
 
     private Runnable wifiStartScanRunnable = new Runnable() {
         @Override
@@ -53,13 +52,15 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        settings = getSharedPreferences(Defines.PREFS_NAME, 0);
+        preferencesEditor = settings.edit();
+
         wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         ctx = this;
         checkBoxAutoSwitch = (CheckBox) findViewById(R.id.checkAutoSwitch);
         txtTolerate = (TextView) findViewById(R.id.txtTolerate);
         sbTolerate = (SeekBar)findViewById(R.id.seekBarTolerate);
         switchServiceStatus = (ToggleButton)findViewById(R.id.switchServiceStatus);
-        switchServiceStatus.setChecked(true);
         wifiInfoListView = (ListView)findViewById(R.id.listWifi);
 
         restoreSavedPreferences();
@@ -95,9 +96,6 @@ public class MainActivity extends Activity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             return true;
@@ -106,9 +104,9 @@ public class MainActivity extends Activity {
     }
 
     public void restoreSavedPreferences(){
-        SharedPreferences settings = getSharedPreferences(Defines.PREFS_NAME, 0);
         txtTolerate.setText(settings.getInt(Defines.TOLERATE_PREFS_NAME, 0) + "");
         sbTolerate.setProgress(settings.getInt(Defines.TOLERATE_PREFS_NAME, 0));
+        switchServiceStatus.setChecked(settings.getBoolean(Defines.SHOULD_RUN, true));
         checkBoxAutoSwitch.setChecked(settings.getBoolean(Defines.AUTO_SWITCH_PREFS_NAME, false));
     }
 
@@ -116,11 +114,7 @@ public class MainActivity extends Activity {
         //receiver responsable for filling wifi list at main activity
         broadcastWifiInfo = new BroadcastFillWifiInfo();
         IntentFilter intentFilter = new IntentFilter(Defines.FILL_DATA);
-        //intentFilter.addCategory(Intent.CATEGORY_DEFAULT);
         registerReceiver(broadcastWifiInfo, intentFilter);
-
-        //WifiReceiver wifiReceiver = new WifiReceiver();
-        //registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
     }
 
     public void startWifiScanThread(){
@@ -149,10 +143,9 @@ public class MainActivity extends Activity {
         @Override
         public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
             txtTolerate.setText(i+"");
-            SharedPreferences settings = getSharedPreferences(Defines.PREFS_NAME, 0);
-            SharedPreferences.Editor editor = settings.edit();
-            editor.putInt(Defines.TOLERATE_PREFS_NAME, Integer.parseInt(txtTolerate.getText().toString()));
-            editor.commit();
+            preferencesEditor = settings.edit();
+            preferencesEditor.putInt(Defines.TOLERATE_PREFS_NAME, Integer.parseInt(txtTolerate.getText().toString()));
+            preferencesEditor.commit();
         }
     };
 
@@ -160,10 +153,8 @@ public class MainActivity extends Activity {
 
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            SharedPreferences settings = getSharedPreferences(Defines.PREFS_NAME, 0);
-            SharedPreferences.Editor editor = settings.edit();
-            editor.putBoolean(Defines.AUTO_SWITCH_PREFS_NAME, isChecked);
-            editor.commit();
+            preferencesEditor.putBoolean(Defines.AUTO_SWITCH_PREFS_NAME, isChecked);
+            preferencesEditor.commit();
         }
     };
 
@@ -178,6 +169,8 @@ public class MainActivity extends Activity {
             }else{
                 handler.removeCallbacks(wifiStartScanRunnable);
             }
+            preferencesEditor.putBoolean(Defines.SHOULD_RUN, isChecked);
+            preferencesEditor.commit();
         }
 
     };
