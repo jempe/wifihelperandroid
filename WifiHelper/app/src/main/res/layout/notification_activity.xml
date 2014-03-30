@@ -12,7 +12,6 @@
         android:layout_height="wrap_content"
         android:text="Yes"
         android:id="@+id/yesButton"
-        android:layout_alignBottom="@+id/txtWifiInfo"
         android:layout_toLeftOf="@+id/noButton" />
 
     <Button
@@ -28,18 +27,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Switch to home"
-        android:id="@+id/txtNotificationText"
+        android:id="@+id/txtSwitchinfo"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/imageView"
         android:layout_marginLeft="25dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="home1: -41dBm\nhome2: -40dBm"
-        android:id="@+id/txtWifiInfo"
-        android:layout_below="@+id/txtNotificationText"
-        android:layout_alignLeft="@+id/txtNotificationText" />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -47,8 +38,24 @@
         android:id="@+id/imageView"
         android:src="@drawable/ic_launcher"
         android:layout_marginLeft="15dp"
-        android:layout_alignBottom="@+id/txtWifiInfo"
         android:layout_alignParentLeft="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Current: home1: -45"
+        android:id="@+id/txtCurrentWifi"
+        android:layout_below="@+id/txtSwitchinfo"
+        android:layout_alignLeft="@+id/txtSwitchinfo" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New: home2: -90"
+        android:id="@+id/txtNewWifi"
+        android:layout_below="@+id/txtCurrentWifi"
+        android:layout_alignLeft="@+id/txtCurrentWifi"
+        android:layout_alignStart="@+id/txtCurrentWifi" />
 
 
 </RelativeLayout>

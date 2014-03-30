@@ -154,11 +154,12 @@ public class WifiReceiver extends BroadcastReceiver{
         mBuilder.setContent(contentView);
 
         //altera o conteudo do texto da notificacao
-        contentView.setTextViewText(R.id.txtNotificationText, "Switch to: " + newWifi.SSID);
+        contentView.setTextViewText(R.id.txtSwitchinfo, "Switch to: " + newWifi.SSID);
 
-        //todo: improve the way it's done
-        contentView.setTextViewText(R.id.txtWifiInfo, "Current: " + currentWifi.SSID+": "
-                + currentWifi.level + "\nNew:      " + newWifi.SSID + ": " + newWifi.level);
+        contentView.setTextViewText(R.id.txtCurrentWifi, "Current: " + currentWifi.SSID+": "
+                + currentWifi.level);
+        contentView.setTextViewText(R.id.txtNewWifi, "New:      " + newWifi.SSID + ": "
+                + newWifi.level);
 
         NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         //manager.cancel(Defines.NOTIFICATION_ID);
