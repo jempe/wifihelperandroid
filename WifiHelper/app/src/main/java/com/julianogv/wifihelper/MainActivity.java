@@ -38,12 +38,13 @@ public class MainActivity extends Activity {
     Context ctx;
     CheckBox checkBoxAutoSwitch;
     ListView wifiInfoListView;
+    public static long delay = 0;
 
     private Runnable wifiStartScanRunnable = new Runnable() {
         @Override
         public void run() {
             wifiManager.startScan();
-            handler.postDelayed(this, Defines.DELAY);
+            handler.postDelayed(this, Defines.WIFI_SCAN_RESULTS_DELAY);
         }
     };
 
@@ -126,7 +127,7 @@ public class MainActivity extends Activity {
         //I've heard its better to use handler than timer
         handler = new Handler();
         handler.removeCallbacks(wifiStartScanRunnable);
-        handler.postDelayed(wifiStartScanRunnable, Defines.WIFI_RECEIVER_DELAY+1);
+        handler.postDelayed(wifiStartScanRunnable, 100);
     }
 
     public void prepareListeners(){
@@ -148,8 +149,6 @@ public class MainActivity extends Activity {
         @Override
         public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
             txtTolerate.setText(i+"");
-
-            //save this value which will be used at WifiManagerService
             SharedPreferences settings = getSharedPreferences(Defines.PREFS_NAME, 0);
             SharedPreferences.Editor editor = settings.edit();
             editor.putInt(Defines.TOLERATE_PREFS_NAME, Integer.parseInt(txtTolerate.getText().toString()));

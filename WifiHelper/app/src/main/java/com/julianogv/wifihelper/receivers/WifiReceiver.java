@@ -14,13 +14,10 @@ import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import com.julianogv.wifihelper.Defines;
-import com.julianogv.wifihelper.MainActivity;
 import com.julianogv.wifihelper.R;
 import com.julianogv.wifihelper.WifiUtils;
 
@@ -44,7 +41,7 @@ public class WifiReceiver extends BroadcastReceiver{
 
     @Override
     public void onReceive(Context context, Intent intent) {
-
+        Log.d("GALHIEGO", "SCANRESULT");
         WifiConfiguration wifiConfig;
         ScanResult currentWifi = null;
         ScanResult bestResult = null;
