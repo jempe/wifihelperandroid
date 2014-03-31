@@ -42,9 +42,7 @@ public class WifiReceiver extends BroadcastReceiver{
     public void onReceive(Context context, Intent intent) {
         settings = context.getSharedPreferences(Defines.PREFS_NAME, 0);
         //
-        Log.d("GALHIEGO", "SCAN RESULTS RECEIVED");
         if(!settings.getBoolean(Defines.SHOULD_RUN, true)){
-            Log.d("GALHIEGO", "SHOULD RUN = FALSE");
             return;
         }
         WifiConfiguration wifiConfig;
