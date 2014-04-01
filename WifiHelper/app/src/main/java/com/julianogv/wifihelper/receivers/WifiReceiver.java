@@ -98,7 +98,7 @@ public class WifiReceiver extends BroadcastReceiver{
         }
 
         sendBroadcastToFillWifiList(arrayWifiInfo);
-        if(bestResult == null){
+        if(currentWifi == null || bestResult == null){
             WifiUtils.cancelNotification(context);
             return;
         }
