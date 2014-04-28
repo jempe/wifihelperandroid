@@ -14,5 +14,6 @@ public class Defines {
     public static final String AUTO_SWITCH_PREFS_NAME = "AUTO_SWITCH_PREFS";
     public static final int WIFI_SCAN_RESULTS_DELAY = 22000;
     public static final String SHOULD_RUN = "RUNNING_PREFS";
+    public static final String PREF_LOGIN_COUNT = "com.julianogv.wifihlper.LOGIN";
 }
 

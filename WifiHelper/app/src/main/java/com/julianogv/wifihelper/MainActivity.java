@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.google.analytics.tracking.android.EasyTracker;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.julianogv.wifihelper.listeners.InterstitialAdListener;
@@ -48,13 +49,24 @@ public class MainActivity extends Activity {
     };
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        EasyTracker.getInstance(this).activityStart(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EasyTracker.getInstance(this).activityStart(this);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         settings = getSharedPreferences(Defines.PREFS_NAME, 0);
         preferencesEditor = settings.edit();
-
         wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         ctx = this;
         checkBoxAutoSwitch = (CheckBox) findViewById(R.id.checkAutoSwitch);
@@ -74,11 +86,18 @@ public class MainActivity extends Activity {
         AdRequest adRequest = new AdRequest.Builder().build();
         interstitialAds.loadAd(adRequest);
 
-        AlertDialog.Builder alertBox = new AlertDialog.Builder(this);
-        alertBox.setNeutralButton("OK", null);
-        alertBox.setMessage(R.string.working);
-        alertBox.setIcon(R.drawable.ic_launcher);
-        alertBox.show();
+        //rate app dialog
+        int openCount = Utils.increaseOpenCount(ctx);
+        if(openCount == 3){
+            Utils.showRateDialog(ctx);
+        }
+        if(openCount <= 2){
+            AlertDialog.Builder alertBox = new AlertDialog.Builder(this);
+            alertBox.setNeutralButton("OK", null);
+            alertBox.setMessage(R.string.working);
+            alertBox.setIcon(R.drawable.ic_launcher);
+            alertBox.show();
+        }
     }
 
     @Override

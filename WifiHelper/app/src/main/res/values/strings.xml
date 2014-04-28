@@ -6,5 +6,9 @@
     <string name="action_settings">Settings</string>
     <string name="tolerate">Minimum distance between wifi signal strength</string>
     <string name="working">It\'s already working!\n\nAs soon as it finds a better WiFi signal you will be notified!\n\nIt will be running in background, you can close this app if you want.</string>
+    <string name="dialog_rate_app_title">Rate WiFi Helper</string>
+    <string name="dialog_rate_app_message">If you enjoy using WiFi Helper, please take a moment to rate the app. Thank you for your support!</string>
+    <string name="dialog_rate_app_ok_button">Rate Now</string>
+    <string name="dialog_rate_app_no_button">No, Thanks</string>
 
 </resources>
