@@ -57,7 +57,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onStop() {
         super.onStop();
-        EasyTracker.getInstance(this).activityStart(this);
+        EasyTracker.getInstance(this).activityStop(this);
     }
 
     @Override

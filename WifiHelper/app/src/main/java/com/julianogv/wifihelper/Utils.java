@@ -31,6 +31,13 @@ public class Utils {
         builder.setTitle(R.string.dialog_rate_app_title);
         builder.setMessage(R.string.dialog_rate_app_message);
 
+        EasyTracker.getInstance(context).send(MapBuilder.createEvent("ui_action", // Event category (required)
+                        "rate_app_dialog",  // Event action (required)
+                        "RATE DIALOG OPENED",   // Event label
+                        null)            // Event value
+                        .build()
+        );
+
         builder.setPositiveButton(R.string.dialog_rate_app_ok_button, new Dialog.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

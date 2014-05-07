@@ -24,7 +24,9 @@ public class WifiUtils {
 
         wifiConfigurations = mainWifi.getConfiguredNetworks();
         for (int i = 0; i < wifiConfigurations.size(); i++) {
-            if (wifiConfigurations.get(i).SSID.equalsIgnoreCase(SSID))
+            if (wifiConfigurations.get(i) != null &&
+                    wifiConfigurations.get(i).SSID != null &&
+                    wifiConfigurations.get(i).SSID.equalsIgnoreCase(SSID))
                 return wifiConfigurations.get(i);
         }
         return null;
