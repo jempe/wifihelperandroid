@@ -80,12 +80,6 @@ public class MainActivity extends Activity {
         setBroadcastReceivers();
         startWifiScanThread();
 
-        InterstitialAd interstitialAds = new InterstitialAd(this);
-        interstitialAds.setAdUnitId("ca-app-pub-1817810316504207/1298383595");
-        interstitialAds.setAdListener(new InterstitialAdListener(interstitialAds));
-        AdRequest adRequest = new AdRequest.Builder().build();
-        interstitialAds.loadAd(adRequest);
-
         //rate app dialog
         int openCount = Utils.increaseOpenCount(ctx);
         if(openCount == 3){
@@ -97,6 +91,16 @@ public class MainActivity extends Activity {
             alertBox.setMessage(R.string.working);
             alertBox.setIcon(R.drawable.ic_launcher);
             alertBox.show();
+        }
+
+        if(!Utils.getAndSetAlreadyShowedD2P(ctx, true) && openCount > 5){
+            Utils.showTestD2PApp(ctx);
+        }else {
+            InterstitialAd interstitialAds = new InterstitialAd(this);
+            interstitialAds.setAdUnitId("ca-app-pub-1817810316504207/1298383595");
+            interstitialAds.setAdListener(new InterstitialAdListener(interstitialAds));
+            AdRequest adRequest = new AdRequest.Builder().build();
+            interstitialAds.loadAd(adRequest);
         }
     }
 

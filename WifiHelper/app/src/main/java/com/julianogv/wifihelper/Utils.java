@@ -47,7 +47,7 @@ public class Utils {
                                 null)            // Event value
                                 .build()
                 );
-                startGooglePlay(context);
+                startGooglePlay(context, context.getPackageName());
             }
         });
 
@@ -65,17 +65,65 @@ public class Utils {
         builder.create().show();
     }
 
+    public static void showTestD2PApp(final Context context){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Try our new app for Free");
+        builder.setMessage("\"Desktop to Phone Data Transfer\" is our new app!");
 
-    public static void startGooglePlay(final Context context) {
+        EasyTracker.getInstance(context).send(MapBuilder.createEvent("ui_action", // Event category (required)
+                        "try_desktoptophone",  // Event action (required)
+                        "DialogOpen",   // Event label
+                        null)            // Event value
+                        .build()
+        );
+
+        builder.setPositiveButton("Try It Now", new Dialog.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                EasyTracker.getInstance(context).send(MapBuilder.createEvent("ui_action", // Event category (required)
+                                "try_desktoptophone",  // Event action (required)
+                                "TryItNow",   // Event label
+                                null)            // Event value
+                                .build()
+                );
+                startGooglePlay(context, Defines.DESKTOPTOPHONE_PACKAGE_NAME);
+            }
+        });
+
+        builder.setNeutralButton("Not Now", new Dialog.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                EasyTracker.getInstance(context).send(MapBuilder.createEvent("ui_action", // Event category (required)
+                                "try_desktoptophone",  // Event action (required)
+                                "NotNow",   // Event label
+                                null)            // Event value
+                                .build()
+                );
+            }
+        });
+        builder.create().show();
+    }
+
+    public static boolean getAndSetAlreadyShowedD2P(Context context, boolean value){
+        SharedPreferences prefs = context.getSharedPreferences(
+                Defines.PREFS_NAME, Context.MODE_PRIVATE);
+        boolean ret = prefs.getBoolean(Defines.ALREADY_SHOWED_D2P, false);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean(Defines.ALREADY_SHOWED_D2P, true);
+        editor.commit();
+        return ret;
+    }
+
+    public static void startGooglePlay(final Context context, String packageName) {
         String url;
         Intent intent;
 
         try {
             //Check whether Google Play store is installed or not:
             context.getPackageManager().getPackageInfo("com.android.vending", 0);
-            url = "market://details?id=" + context.getPackageName();
+            url = "market://details?id=" + packageName;
         } catch (final Exception e) {
-            url = "https://play.google.com/store/apps/details?id=" + context.getPackageName();
+            url = "https://play.google.com/store/apps/details?id=" + packageName;
         }
         intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);

@@ -6,26 +6,21 @@ android {
     defaultConfig {
         minSdkVersion 9
         targetSdkVersion 19
-        versionCode 27
-        versionName "2.4.1"
+        versionCode 29
+        versionName "2.4.3"
     }
 
     signingConfigs {
         debug {
-            storeFile file('c:/users/juliano.vieira/.android/debug.keystore')
+            storeFile file("F:\\GoogleDrive\\androidprojects\\debug.keystore")
         }
 
         releaseSign {
-
-            if(project.hasProperty("MyProject.signing")
-                    && new File(project.property("MyProject.signing") + ".gradle").exists()) {
-                apply from: project.property("MyProject.signing") + ".gradle";
-
-                storeFile file(signStoreFile)
-                keyPassword signPassword
-                keyAlias signKeyAlias
-                storePassword signPassword
-            }
+            apply from: "F:\\GoogleDrive\\androidprojects\\gradleconfig.gradle"
+            storeFile file(signStoreFile)
+            keyPassword signPassword
+            keyAlias signKeyAlias
+            storePassword signPassword
         }
     }
     buildTypes {
