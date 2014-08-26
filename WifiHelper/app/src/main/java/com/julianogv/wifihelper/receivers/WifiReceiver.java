@@ -76,14 +76,18 @@ public class WifiReceiver extends BroadcastReceiver{
                 continue;
 
             //when it's the current wifi add a *
-            if (wifiManager.getConnectionInfo().getSSID().equals("\"" + wifiList.get(i).SSID + "\"")) {
+            if (wifiManager.getConnectionInfo() != null &&
+                    wifiManager.getConnectionInfo().getSSID() != null &&
+                    wifiManager.getConnectionInfo().getSSID().equals("\"" + wifiList.get(i).SSID + "\"")) {
                 arrayWifiInfo.add(wifiList.get(i).SSID + ": " + wifiList.get(i).level + "*");
             } else {
                 arrayWifiInfo.add(wifiList.get(i).SSID + ": " + wifiList.get(i).level);
             }
 
             //save current wifi
-            if (wifiManager.getConnectionInfo().getBSSID().equals(wifiList.get(i).BSSID)) {
+            if (wifiManager.getConnectionInfo() != null &&
+                    wifiManager.getConnectionInfo().getBSSID() != null &&
+                    wifiManager.getConnectionInfo().getBSSID().equals(wifiList.get(i).BSSID)) {
                 currentWifi = wifiList.get(i);
                 continue;
             }

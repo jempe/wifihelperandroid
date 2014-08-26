@@ -19,15 +19,19 @@ public class WifiUtils {
     }
 
     public static WifiConfiguration getConfiguredWifiBySSID(String SSID, Context ctx) {
-        WifiManager mainWifi = (WifiManager) ctx.getSystemService(Context.WIFI_SERVICE);
-        List<WifiConfiguration> wifiConfigurations;
+        try {
+            WifiManager mainWifi = (WifiManager) ctx.getSystemService(Context.WIFI_SERVICE);
 
-        wifiConfigurations = mainWifi.getConfiguredNetworks();
-        for (int i = 0; i < wifiConfigurations.size(); i++) {
-            if (wifiConfigurations.get(i) != null &&
-                    wifiConfigurations.get(i).SSID != null &&
-                    wifiConfigurations.get(i).SSID.equalsIgnoreCase(SSID))
-                return wifiConfigurations.get(i);
+            List<WifiConfiguration> wifiConfigurations;
+
+            wifiConfigurations = mainWifi.getConfiguredNetworks();
+            for (int i = 0; i < wifiConfigurations.size(); i++) {
+                if (wifiConfigurations.get(i) != null &&
+                        wifiConfigurations.get(i).SSID != null &&
+                        wifiConfigurations.get(i).SSID.equalsIgnoreCase(SSID))
+                    return wifiConfigurations.get(i);
+            }
+        }catch(Exception e){
         }
         return null;
     }

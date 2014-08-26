@@ -23,6 +23,7 @@ import android.widget.ToggleButton;
 
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.julianogv.wifihelper.listeners.InterstitialAdListener;
 
@@ -39,6 +40,7 @@ public class MainActivity extends Activity {
     public static long delay = 0;
     SharedPreferences settings;
     SharedPreferences.Editor preferencesEditor;
+    private AdView adView;
 
     private Runnable wifiStartScanRunnable = new Runnable() {
         @Override
@@ -102,6 +104,7 @@ public class MainActivity extends Activity {
             AdRequest adRequest = new AdRequest.Builder().build();
             interstitialAds.loadAd(adRequest);
         }
+
     }
 
     @Override

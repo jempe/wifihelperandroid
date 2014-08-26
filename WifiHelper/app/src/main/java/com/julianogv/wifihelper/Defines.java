@@ -15,7 +15,7 @@ public class Defines {
     public static final int WIFI_SCAN_RESULTS_DELAY = 22000;
     public static final String SHOULD_RUN = "RUNNING_PREFS";
     public static final String PREF_LOGIN_COUNT = "com.julianogv.wifihlper.LOGIN";
-    public static final String DESKTOPTOPHONE_PACKAGE_NAME = "com.julianogv.desktoptophonedatatransfer";
+    public static final String DESKTOPTOPHONE_PACKAGE_NAME = "com.julianogv.desktoptophonedatatransfer&referrer=utm_source%3Dwifihelper%26utm_medium%3Dredirect%26utm_term%3Dhelping%252Bmyself%26utm_content%3Dwifihelper%26utm_campaign%3Dwifihelper";
     public static final String ALREADY_SHOWED_D2P = "SHOW_D2P_PREFS";
 }
 
